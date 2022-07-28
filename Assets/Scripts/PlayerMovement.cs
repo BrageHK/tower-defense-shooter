@@ -47,7 +47,6 @@ public class PlayerMovement : MonoBehaviour
 
         if(Mouse.current.leftButton.wasPressedThisFrame) {
             weapon.Fire();
-            Debug.Log("Fired");
         }
     }
 
@@ -59,7 +58,6 @@ public class PlayerMovement : MonoBehaviour
     // Activated when the player presses the attack button
     void OnFire(InputValue pointerInput) {
         weapon.Fire();
-        Debug.Log("Fired");
     }
 
     void ChangeWeaponAndCharacterDirection() {

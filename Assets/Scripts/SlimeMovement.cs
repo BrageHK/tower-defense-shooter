@@ -8,12 +8,14 @@ public class SlimeMovement : MonoBehaviour
     public float speed = 1f;
     public int level;
     public Tilemap tilemap;
-    
+    public float distanceFromLastCheckpoint;
+    public int movePositionIndex;
+
     private Vector2Int[] movePositions;
     private Rigidbody2D rb;
-    private int movePositionIndex;
 
-    private void Awake() {
+    private void Awake()
+    {
         rb = GetComponent<Rigidbody2D>();
         level = 0;
         movePositions = new Vector2Int[LevelData.PathCorners.GetLength(1)];
@@ -29,12 +31,14 @@ public class SlimeMovement : MonoBehaviour
     }
 
     void Update()
-    {   
+    { 
+        //Vector3 transform.position
         transform.position = Vector2.MoveTowards(transform.position, GetWorldPosition(movePositions[movePositionIndex]), speed * Time.deltaTime);
         CheckPosition();
     }
 
-    private void CheckPosition() {
+    private void CheckPosition()
+    {
         if (Vector2.Distance(transform.position, GetWorldPosition(movePositions[movePositionIndex])) < 0.01f) {
             movePositionIndex++;
             if (movePositionIndex >= movePositions.Length) {
@@ -48,12 +52,12 @@ public class SlimeMovement : MonoBehaviour
     }
 
     private void OnCollisionEnter2D(Collision2D other) {
-        Debug.Log(HP);
-        if (other.gameObject.tag == "Bullet") {
+        if (other.gameObject.CompareTag("Bullet")) {
             HP -= other.gameObject.GetComponent<BulletController>().damage;
             if (HP <= 0) {
                 Destroy(gameObject);
             }
         }
     }
+
 }
