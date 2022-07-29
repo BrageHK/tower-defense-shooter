@@ -5,6 +5,14 @@ using UnityEngine.EventSystems;
 
 public class DragDropSprite : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
+    [SerializeField] private Canvas canvas;
+    private RectTransform rectTransform;
+
+    private void Awake()
+    {
+        rectTransform = GetComponent<RectTransform>();
+    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         throw new System.NotImplementedException();
@@ -12,7 +20,7 @@ public class DragDropSprite : MonoBehaviour, IPointerDownHandler, IBeginDragHand
 
     public void OnDrag(PointerEventData eventData)
     {
-        throw new System.NotImplementedException();
+        rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
     }
 
     public void OnEndDrag(PointerEventData eventData)
