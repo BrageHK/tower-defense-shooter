@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using TMPro;
 
 
 public class LevelController : MonoBehaviour
@@ -13,69 +14,90 @@ public class LevelController : MonoBehaviour
     private int wave = 0;
     private float enemyTimer = 0;
     private float waveTimer = 0;
-    private float endOfWaveMaxTime = 20; //After a wave is done, this is the time to the next wave
-    private int spawnedSlimes = 0;
-    private bool isWaveInProgress = false;
+    private float betweenWaveTimer = 20;
+    private const float endOfWaveMaxTime = 20; //After a wave is done, this is the time to the next wave
+    private int spawnedEnemies = 0;
+    private bool isWaveInProgress = true;
     private float waveMinLength = 9999f;
     public Button button;
+    public TextMeshProUGUI waveText;
+    public TextMeshProUGUI waveTimerText;
 
 
     private void Start()
     {
         CloseBetweenWavesUI();   
-        isWaveInProgress = true;
     }
 
     private void Update() {
-        enemyTimer += Time.deltaTime;
-        waveTimer += Time.deltaTime;
-
-        //When there are no enemies on screen and the timer is longer than the minimum lenght, set the wavestatus to false.
-        if (GameObject.FindWithTag("Enemy") == null && waveMinLength <= waveTimer)
-        {
-            isWaveInProgress = false;
-        }
+        //Timers
+        enemyTimer += Time.deltaTime; //Time since last enemy was spawned
+        
 
         //This is run when the wave is in progress
         if (isWaveInProgress)
         {
             EnemySpawner();
+            waveTimer += Time.deltaTime; //This is the timer for the current wave
         }
 
         //This is run between waves
         if (!isWaveInProgress)
         {
             OpenBetweenWavesUI();
-            endOfWaveMaxTime -= Time.deltaTime;
-
-            if (endOfWaveMaxTime <= 0)
+            betweenWaveTimer -= Time.deltaTime;
+            if (betweenWaveTimer <= 0)
             {
-                
-                StartNextWave();
-                
+                wave++;
+                betweenWaveTimer = endOfWaveMaxTime;
+                CloseBetweenWavesUI();
+                isWaveInProgress = true;
+                spawnedEnemies = 0;
+                waveTimer = 0;
             }
         }
 
+        UpdateText();
 
+
+
+        //When there are no enemies on screen and the timer is longer than the minimum length, set the wave status to false.
+        if (GameObject.FindWithTag("Enemy") == null && waveMinLength <= waveTimer)
+        {
+            isWaveInProgress = false;
+        }
     }
 
+    private void UpdateText()
+    {
+        waveText.text = "Wave: " + wave;
+        waveTimerText.text = "Next wave in: " + Mathf.Round(betweenWaveTimer);
+    }
+
+    public void SetBetweenWaveTimerToZero()
+    {
+        betweenWaveTimer = 0;
+    }
     private void OpenBetweenWavesUI()
     {
-        button.interactable = true;
+        button.enabled = true;
+        waveTimerText.enabled = true;
         //enable and disable more UI elements
     }
 
     private void CloseBetweenWavesUI()
     {
-        button.interactable = false;
+        button.enabled = false;
+        waveTimerText.enabled = false;
         //enable and disable more UI elements
     }
 
     public void EnemySpawner() {
-        isWaveInProgress = true;
+        
+        Debug.Log(isWaveInProgress);
         switch (wave) {
             case 0:
-                SpawnSlimes(5, 0.4f);
+                SpawnSlimes(1, 0.4f);
                 break;
             case 1:
                 SpawnSlimes(8, 0.4f);
@@ -83,26 +105,18 @@ public class LevelController : MonoBehaviour
             case 2:
                 SpawnSlimes(10, 0.4f);
                 break;
+            default: 
+                SpawnSlimes(2, 0.4f);
+                break;
         }
     }
-
-    public void StartNextWave()
-    {
-        endOfWaveMaxTime = 20;
-        EnemySpawner();
-        spawnedSlimes = 0;
-        wave++;
-        CloseBetweenWavesUI();
-    }
-
-
 
     private void SpawnSlimes(int slimes, float spawnDelay)
     {
         waveMinLength = slimes * spawnDelay;
-        if (spawnedSlimes >= slimes)
+        if (spawnedEnemies >= slimes)
         {
-
+            Debug.Log("Spawned Slimes: " + spawnedEnemies);
             return;
         }
 
@@ -110,8 +124,7 @@ public class LevelController : MonoBehaviour
         {
             GameObject slimeEnemy = Instantiate(slime, new Vector3(0, 0, 0), Quaternion.identity, transform);
             enemyTimer = 0;
-            spawnedSlimes++;
-        
+            spawnedEnemies++;
         }
             
     }
