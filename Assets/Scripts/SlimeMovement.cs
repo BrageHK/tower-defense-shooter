@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 public class SlimeMovement : MonoBehaviour
 {
     public float HP = 100f;
-    public float speed = 1f;
+    public float speed = 0.3f;
     public int level;
     public Tilemap tilemap;
     public float distanceFromLastCheckpoint;

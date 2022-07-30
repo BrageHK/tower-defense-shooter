@@ -7,15 +7,17 @@ public class DragDropSprite : MonoBehaviour, IPointerDownHandler, IBeginDragHand
 {
     [SerializeField] private Canvas canvas;
     private RectTransform rectTransform;
+    private bool isLegalPosition = false;
+    private Vector2 startPosition;
 
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
+        startPosition = rectTransform.anchoredPosition;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        throw new System.NotImplementedException();
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -25,12 +27,16 @@ public class DragDropSprite : MonoBehaviour, IPointerDownHandler, IBeginDragHand
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        throw new System.NotImplementedException();
+        if (!isLegalPosition)
+        {
+            
+        }
+        
+        rectTransform.anchoredPosition = startPosition;
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        throw new System.NotImplementedException();
     }
 
     private Vector2 ClosestEnemyPosition()

@@ -23,9 +23,14 @@ public class LevelController : MonoBehaviour
     public TextMeshProUGUI waveText;
     public TextMeshProUGUI waveTimerText;
 
+    //Cursor sprite
+    public Texture2D cursorTexture;
+    public CursorMode cursorMode = CursorMode.Auto;
+
 
     private void Start()
     {
+        Cursor.SetCursor(cursorTexture, Vector2.zero, cursorMode);
         CloseBetweenWavesUI();   
     }
 
