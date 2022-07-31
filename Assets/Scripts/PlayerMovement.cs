@@ -5,10 +5,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float speed = 300f;
+    
     //The weapon offset needs to be the same as the weaponParent's transform.position.y * -1
     public Vector2 weaponOffset = new Vector2(0, 0.08f);
-
+    public float speed = 300f;
  
     private PlayerInput playerInput;
     private Rigidbody2D rb;

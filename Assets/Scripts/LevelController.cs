@@ -23,14 +23,11 @@ public class LevelController : MonoBehaviour
     public TextMeshProUGUI waveText;
     public TextMeshProUGUI waveTimerText;
 
-    //Cursor sprite
-    public Texture2D cursorTexture;
-    public CursorMode cursorMode = CursorMode.Auto;
+ 
 
 
     private void Start()
     {
-        Cursor.SetCursor(cursorTexture, Vector2.zero, cursorMode);
         CloseBetweenWavesUI();   
     }
 
@@ -86,6 +83,7 @@ public class LevelController : MonoBehaviour
     private void OpenBetweenWavesUI()
     {
         button.enabled = true;
+        button.gameObject.SetActive(true);
         waveTimerText.enabled = true;
         //enable and disable more UI elements
     }
@@ -93,13 +91,12 @@ public class LevelController : MonoBehaviour
     private void CloseBetweenWavesUI()
     {
         button.enabled = false;
+        button.gameObject.SetActive(false);
         waveTimerText.enabled = false;
         //enable and disable more UI elements
     }
 
     public void EnemySpawner() {
-        
-        Debug.Log(isWaveInProgress);
         switch (wave) {
             case 0:
                 SpawnSlimes(1, 0.4f);
@@ -121,7 +118,6 @@ public class LevelController : MonoBehaviour
         waveMinLength = slimes * spawnDelay;
         if (spawnedEnemies >= slimes)
         {
-            Debug.Log("Spawned Slimes: " + spawnedEnemies);
             return;
         }
 
