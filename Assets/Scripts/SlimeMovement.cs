@@ -60,4 +60,9 @@ public class SlimeMovement : MonoBehaviour
         }
     }
 
+    public Vector2 GetDirectionVector(float extraDistance)
+    {
+        return Vector2.ClampMagnitude(GetWorldPosition(movePositions[movePositionIndex]) - (Vector2)transform.position, extraDistance);
+    }
+
 }
