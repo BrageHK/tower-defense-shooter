@@ -8,7 +8,7 @@ public class SlimeMovement : MonoBehaviour
     public float speed = 0.3f;
     public int level;
     public Tilemap tilemap;
-    public float distanceFromLastCheckpoint;
+    public float distanceFromLastCheckpoint { get; private set; }
     public int movePositionIndex;
 
     private Vector2Int[] movePositions;
@@ -28,6 +28,7 @@ public class SlimeMovement : MonoBehaviour
             movePositions[i] = LevelData.PathCorners[level, i];
         }
         transform.position = GetWorldPosition(movePositions[0]);
+
     }
 
     void Update()
@@ -35,6 +36,8 @@ public class SlimeMovement : MonoBehaviour
         //Vector3 transform.position
         transform.position = Vector2.MoveTowards(transform.position, GetWorldPosition(movePositions[movePositionIndex]), speed * Time.deltaTime);
         CheckPosition();
+        distanceFromLastCheckpoint = Vector2.Distance(transform.position, GetWorldPosition(movePositions[movePositionIndex]));
+
     }
 
     private void CheckPosition()
