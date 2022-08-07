@@ -36,7 +36,7 @@ public class SlimeMovement : MonoBehaviour
         //Vector3 transform.position
         transform.position = Vector2.MoveTowards(transform.position, GetWorldPosition(movePositions[movePositionIndex]), speed * Time.deltaTime);
         CheckPosition();
-        distanceFromLastCheckpoint = Vector2.Distance(transform.position, GetWorldPosition(movePositions[movePositionIndex]));
+        distanceFromLastCheckpoint = Vector2.Distance(transform.position, GetWorldPosition(movePositions[movePositionIndex-1]));
 
     }
 
