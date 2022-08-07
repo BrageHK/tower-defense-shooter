@@ -55,5 +55,6 @@
     },
     "cSpell.words": [
         "Inputvalue"
-    ]
+    ],
+    "git.ignoreLimitWarning": true
 }
