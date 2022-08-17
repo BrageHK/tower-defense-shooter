@@ -17,6 +17,5 @@ public class StartNewWaveButton : MonoBehaviour
     private void TaskOnClick()
     {
         level.SetBetweenWaveTimerToZero();
-        Debug.Log("Clicked Button!!");
     }
 }

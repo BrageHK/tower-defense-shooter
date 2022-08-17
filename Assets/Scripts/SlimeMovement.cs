@@ -10,6 +10,7 @@ public class SlimeMovement : MonoBehaviour
     public Tilemap tilemap;
     public float distanceFromLastCheckpoint { get; private set; }
     public int movePositionIndex;
+    public int deathMoney = 5;
 
     private Vector2Int[] movePositions;
     private Rigidbody2D rb;
@@ -58,7 +59,7 @@ public class SlimeMovement : MonoBehaviour
         if (other.gameObject.CompareTag("Bullet")) {
             HP -= other.gameObject.GetComponent<BulletController>().damage;
             if (HP <= 0) {
-                Destroy(gameObject);
+                OnDeath();
             }
         }
     }
@@ -68,4 +69,10 @@ public class SlimeMovement : MonoBehaviour
         return Vector2.ClampMagnitude(GetWorldPosition(movePositions[movePositionIndex]) - (Vector2)transform.position, extraDistance);
     }
 
+    private void OnDeath()
+    {
+        
+        GameObject.FindGameObjectWithTag("Grid").GetComponent<LevelController>().money += deathMoney;
+        Destroy(gameObject);
+    }
 }
