@@ -18,7 +18,7 @@ public class LevelController : MonoBehaviour
     public Button button;
     public TextMeshProUGUI waveText, waveTimerText, moneyText;
     public int money = 0;
-    private int[] moneyPerWave = {100, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000};
+    private int[] moneyPerWave = {100, 0, 0, 0, 0, 500, 600, 700, 800, 900, 1000};
     public GameObject tower1;
 
  
@@ -126,7 +126,7 @@ public class LevelController : MonoBehaviour
                 SpawnSlimes(10, 0.4f);
                 break;
             default: 
-                SpawnSlimes(2, 0.4f);
+                SpawnSlimes(70, 0.05f);
                 break;
         }
     }

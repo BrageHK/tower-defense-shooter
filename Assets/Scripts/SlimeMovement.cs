@@ -5,6 +5,7 @@ using UnityEngine.Tilemaps;
 public class SlimeMovement : MonoBehaviour
 {
     public float HP = 100f;
+    public float HPBarOffset = 0.01f;
     public float speed = 0.3f;
     public int level;
     public Tilemap tilemap;
@@ -14,6 +15,10 @@ public class SlimeMovement : MonoBehaviour
 
     private Vector2Int[] movePositions;
     private Rigidbody2D rb;
+    private HealthBar healthBar;
+    private GameObject healthBarObject;
+    private GameObject healthBarObjectCopy;
+    private Camera cam;
 
     private void Awake()
     {
@@ -21,6 +26,12 @@ public class SlimeMovement : MonoBehaviour
         level = 0;
         movePositions = new Vector2Int[LevelData.PathCorners.GetLength(1)];
         tilemap = GameObject.Find("Ground").GetComponent<Tilemap>();
+        healthBarObject = Resources.Load("Prefabs/HP Bar", typeof(GameObject)) as GameObject;
+        healthBarObjectCopy = Instantiate(healthBarObject, transform.position + Vector3.up*HPBarOffset, Quaternion.identity, GameObject.Find("MainCanvas").transform);
+        healthBar = healthBarObjectCopy.GetComponent<HealthBar>();
+        healthBar.SetMaxHealth((int)HP);
+        cam = Camera.main;
+        
     }
     
     void Start()
@@ -30,6 +41,8 @@ public class SlimeMovement : MonoBehaviour
         }
         transform.position = GetWorldPosition(movePositions[0]);
 
+       
+
     }
 
     void Update()
@@ -38,6 +51,7 @@ public class SlimeMovement : MonoBehaviour
         transform.position = Vector2.MoveTowards(transform.position, GetWorldPosition(movePositions[movePositionIndex]), speed * Time.deltaTime);
         CheckPosition();
         distanceFromLastCheckpoint = Vector2.Distance(transform.position, GetWorldPosition(movePositions[movePositionIndex-1]));
+        healthBarObjectCopy.transform.position = cam.WorldToScreenPoint(transform.position + new Vector3(0, HPBarOffset, 0));
 
     }
 
@@ -58,6 +72,7 @@ public class SlimeMovement : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D other) {
         if (other.gameObject.CompareTag("Bullet")) {
             HP -= other.gameObject.GetComponent<BulletController>().damage;
+            healthBar.SetHealth((int)HP);
             if (HP <= 0) {
                 OnDeath();
             }
@@ -73,6 +88,7 @@ public class SlimeMovement : MonoBehaviour
     {
         
         GameObject.FindGameObjectWithTag("Grid").GetComponent<LevelController>().money += deathMoney;
+        Destroy(healthBarObjectCopy);
         Destroy(gameObject);
     }
 }
