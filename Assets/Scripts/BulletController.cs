@@ -5,7 +5,7 @@ using UnityEngine;
 public class BulletController : MonoBehaviour
 {
     public float speed = 10f;
-    public float damage = 10f;
+    public float damage = 3f;
     public float lifeTime = 1.5f;
     private float counter = 0f;
 
@@ -20,6 +20,7 @@ public class BulletController : MonoBehaviour
     }
 
     private void OnCollisionEnter2D(Collision2D other) {
+        Debug.Log("Collision");
         Destroy(gameObject);
     }
 }

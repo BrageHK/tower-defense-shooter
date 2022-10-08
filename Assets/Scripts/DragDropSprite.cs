@@ -12,6 +12,7 @@ public class DragDropSprite : MonoBehaviour, IPointerDownHandler, IBeginDragHand
     public Tilemap tilemap;
     public GameObject tower;
     public GameObject towerSprite;
+    public LevelController levelController;
 
     private RectTransform rectTransform;
     private RectTransformUtility rectTransformUtility;
@@ -29,7 +30,6 @@ public class DragDropSprite : MonoBehaviour, IPointerDownHandler, IBeginDragHand
     public void OnBeginDrag(PointerEventData eventData)
     {
         towerInstance = Instantiate(towerSprite, new Vector3(0, 0, 0), Quaternion.identity);
-        Debug.Log("OnBeginDrag");
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -40,9 +40,6 @@ public class DragDropSprite : MonoBehaviour, IPointerDownHandler, IBeginDragHand
         Vector3Int cellPosition = tilemap.WorldToCell(worldPos);
 
         towerInstance.transform.position = tilemap.GetCellCenterWorld(cellPosition);
-        Debug.Log(towerSprite.transform.position);
-        Debug.Log(cellPosition);
-        Debug.Log("sprite position: " + towerSprite.transform.position);
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -53,6 +50,7 @@ public class DragDropSprite : MonoBehaviour, IPointerDownHandler, IBeginDragHand
         if (tilemap.GetTile(cellPosition).name == "grass")
         {
             Instantiate(tower, tilemap.GetCellCenterWorld(cellPosition), Quaternion.identity);
+            levelController.money -= tower.GetComponent<TowerController>().cost;
         }
         rectTransform.anchoredPosition = startPosition;
         Destroy(towerInstance);

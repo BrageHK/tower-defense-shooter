@@ -11,17 +11,15 @@ public class LevelController : MonoBehaviour
     public GameObject slime;
 
 
-    private int wave = 0;
-    private float enemyTimer = 0;
-    private float waveTimer = 0;
-    private float betweenWaveTimer = 20;
+    private int wave = 0, spawnedEnemies = 0;
+    private float enemyTimer = 0, waveTimer = 0, betweenWaveTimer = 20, waveMinLength = 9999f;
     private const float endOfWaveMaxTime = 20; //After a wave is done, this is the time to the next wave
-    private int spawnedEnemies = 0;
-    private bool isWaveInProgress = true;
-    private float waveMinLength = 9999f;
+    private bool isWaveInProgress = true, moneyWasAddedThisWave = false;
     public Button button;
-    public TextMeshProUGUI waveText;
-    public TextMeshProUGUI waveTimerText;
+    public TextMeshProUGUI waveText, waveTimerText, moneyText;
+    public int money = 0;
+    private int[] moneyPerWave = {100, 0, 0, 0, 0, 500, 600, 700, 800, 900, 1000};
+    public GameObject tower1;
 
  
 
@@ -54,18 +52,25 @@ public class LevelController : MonoBehaviour
                 betweenWaveTimer = endOfWaveMaxTime;
                 CloseBetweenWavesUI();
                 isWaveInProgress = true;
+                moneyWasAddedThisWave = false;
                 spawnedEnemies = 0;
                 waveTimer = 0;
             }
         }
 
         UpdateText();
+        UpdateTowerUI();
 
 
 
         //When there are no enemies on screen and the timer is longer than the minimum length, set the wave status to false.
         if (GameObject.FindWithTag("Enemy") == null && waveMinLength <= waveTimer)
         {
+            if(!moneyWasAddedThisWave)
+            {
+                money += moneyPerWave[wave];
+                moneyWasAddedThisWave = true;   
+            }
             isWaveInProgress = false;
         }
     }
@@ -74,6 +79,7 @@ public class LevelController : MonoBehaviour
     {
         waveText.text = "Wave: " + wave;
         waveTimerText.text = "Next wave in: " + Mathf.Round(betweenWaveTimer);
+        moneyText.text = "Money: " + money;
     }
 
     public void SetBetweenWaveTimerToZero()
@@ -96,6 +102,18 @@ public class LevelController : MonoBehaviour
         //enable and disable more UI elements
     }
 
+    private void UpdateTowerUI()
+    {
+        if (money >= 100)
+        {
+            tower1.SetActive(true);
+        }
+        else
+        {
+            tower1.SetActive(false);
+        }
+    }
+
     public void EnemySpawner() {
         switch (wave) {
             case 0:
@@ -108,7 +126,7 @@ public class LevelController : MonoBehaviour
                 SpawnSlimes(10, 0.4f);
                 break;
             default: 
-                SpawnSlimes(2, 0.4f);
+                SpawnSlimes(70, 0.05f);
                 break;
         }
     }
